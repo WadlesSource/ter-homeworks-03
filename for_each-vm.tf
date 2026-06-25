@@ -1,0 +1,37 @@
+data "yandex_compute_image" "ubuntu" {
+  family = "ubuntu-2204-lts"
+}
+resource "yandex_compute_instance" "db" {
+  # Преобразуем list в map, где ключом будет имя ВМ
+  for_each = { for vm in var.each_vm : vm.vm_name => vm }
+
+  name        = each.value.vm_name
+  platform_id = "standard-v3"
+  zone        = each.value.zone
+
+  resources {
+    cores         = each.value.cpu
+    memory        = each.value.ram
+    core_fraction = each.value.core_frac
+  }
+ 
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.id
+      size     = each.value.disk_volume
+      type     = "network-ssd" # Для баз данных рекомендуется быстрый SSD
+    }
+  }
+
+  network_interface {
+    # Ссылаемся на вашу подсеть "develop" или используем строку в кавычках из прошлых шагов
+    subnet_id          = yandex_vpc_subnet.develop.id 
+    nat                = true
+    security_group_ids = ["enpf6932rkdif57f8vr2"] # ID группы безопасности из прошлого шага
+  }
+
+   metadata = {
+    # Используем ту же локальную переменную
+    ssh-keys = "ubuntu:${local.ssh_public_key}"
+  }
+}
