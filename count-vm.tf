@@ -24,7 +24,7 @@ resource "yandex_compute_instance" "web" {
     subnet_id = yandex_vpc_subnet.develop.id 
     nat       = true                                
 
-    # Привязка группы безопасности (замените на переменную или ресурс)
+    # Привязка группы безопасности
     security_group_ids = ["enpf6932rkdif57f8vr2"]
   }
 
