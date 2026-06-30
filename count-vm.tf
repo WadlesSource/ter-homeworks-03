@@ -25,7 +25,7 @@ resource "yandex_compute_instance" "web" {
     nat       = true                                
 
     # Привязка группы безопасности
-    security_group_ids = ["enpf6932rkdif57f8vr2"]
+    security_group_ids = [data.yandex_vpc_security_group.default.id]
   }
 
   metadata = {
