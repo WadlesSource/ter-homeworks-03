@@ -26,7 +26,7 @@ resource "yandex_compute_instance" "db" {
   network_interface {
     subnet_id          = yandex_vpc_subnet.develop.id 
     nat                = true
-    security_group_ids = ["enpf6932rkdif57f8vr2"]
+    security_group_ids = data.yandex_vpc_security_group.default.id
   }
 
    metadata = {
