@@ -19,19 +19,17 @@ resource "yandex_compute_instance" "db" {
     initialize_params {
       image_id = data.yandex_compute_image.ubuntu.id
       size     = each.value.disk_volume
-      type     = "network-ssd" # Для баз данных рекомендуется быстрый SSD
+      type     = "network-ssd"
     }
   }
 
   network_interface {
-    # Ссылаемся на вашу подсеть "develop" или используем строку в кавычках из прошлых шагов
     subnet_id          = yandex_vpc_subnet.develop.id 
     nat                = true
-    security_group_ids = ["enpf6932rkdif57f8vr2"] # ID группы безопасности из прошлого шага
+    security_group_ids = ["enpf6932rkdif57f8vr2"]
   }
 
    metadata = {
-    # Используем ту же локальную переменную
     ssh-keys = "ubuntu:${local.ssh_public_key}"
   }
 }
