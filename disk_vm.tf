@@ -11,7 +11,7 @@ resource "yandex_compute_disk" "storage" {
   # Размер диска в Гб
   size = 1
   
-  # Тип диска (network-hdd — минимальный и самый дешевый вариант)
+  # Тип диска
   type = "network-hdd"
 }
 
@@ -29,7 +29,7 @@ resource "yandex_compute_instance" "storage_vm" {
 
   boot_disk {
     initialize_params {
-      # Используем тот же автоматический поиск образа Ubuntu 22.04 LTS
+      # Используем тот же автоматический поиск образа
       image_id = data.yandex_compute_image.ubuntu.id
     }
   }
@@ -40,7 +40,6 @@ resource "yandex_compute_instance" "storage_vm" {
     for_each = yandex_compute_disk.storage[*].id
 
     content {
-      # secondary_disk.value содержит ID текущего диска в итерации
       disk_id = secondary_disk.value
     }
   }
