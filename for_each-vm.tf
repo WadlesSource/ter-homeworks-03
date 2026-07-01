@@ -1,6 +1,9 @@
 data "yandex_compute_image" "ubuntu" {
   family = "ubuntu-2204-lts"
 }
+data "yandex_vpc_security_group" "default" {
+  name = "example_dynamic"
+}
 resource "yandex_compute_instance" "db" {
   # Преобразуем list в map, где ключом будет имя ВМ
   for_each = { for vm in var.each_vm : vm.vm_name => vm }
